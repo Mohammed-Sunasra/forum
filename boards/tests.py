@@ -2,6 +2,7 @@ from django.urls import reverse, resolve
 from django.test import TestCase
 from .models import Board
 from .views import home, board_topics, new_topic
+from .forms import NewTopicForm
 
 
 class HomeTests(TestCase):
@@ -78,3 +79,13 @@ class NewTopicTests(TestCase):
     def test_home_view_contains_link_to_topics_page(self):
         board_topics_url = reverse('board_topics', kwargs={'pk': self.board.pk})
         self.assertContains(self.response, f'href="{board_topics_url}"')
+
+    def test_check_form_model_type(self):
+        form = self.response.context.get('form')
+        self.assertIsInstance(form, NewTopicForm)
+
+
+    def new_topic_invalid_form_post_data(self):
+        form = self.response.context.get('form')
+        self.assertEquals(self.response.status_code, 200)
+        self.assertTrue(form.errors)
