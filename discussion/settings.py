@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'boards.apps.BoardsConfig',
+    'accounts.apps.AccountsConfig',
     'widget_tweaks',
 ]
 
@@ -52,6 +53,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'discussion.urls'
+
+LOGOUT_REDIRECT_URL = 'home'
 
 TEMPLATES = [
     {
