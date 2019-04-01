@@ -9,7 +9,6 @@ class NewTopicForm(forms.ModelForm):
                         )
 
     class Meta:
-        #template = 'boards/new_topic.html'
         model = Topic
         fields = ['subject', 'message']
     

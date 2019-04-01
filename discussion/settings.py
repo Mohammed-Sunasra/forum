@@ -55,6 +55,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'discussion.urls'
 
 LOGOUT_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = 'home'
 
 TEMPLATES = [
     {
