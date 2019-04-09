@@ -14,7 +14,7 @@ class BoardTopicsTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_board_topics_view_notfound_code(self):
-        url = reverse('board_topics', kwargs={'pk':99})
+        url = reverse('board_topics', kwargs={'pk':9999})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
     
