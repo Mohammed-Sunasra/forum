@@ -4,9 +4,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Board, Topic, Post
 from .forms import NewTopicForm, PostForm
 from django.contrib.auth.decorators import login_required
-from django.views.generic import UpdateView
+from django.views.generic import ListView, UpdateView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+
 
 @method_decorator(login_required, name='dispatch')
 class PostUpdateView(UpdateView):
@@ -28,14 +30,24 @@ class PostUpdateView(UpdateView):
         return redirect('topic_posts', pk=post.topic.board.pk, topic_pk = post.topic.pk)
 
 
-def home(request):
-    boards = Board.objects.all()
-    return render(request, 'boards/home.html', {'boards': boards})
-    
+class BoardListView(ListView):
+    model = Board
+    context_object_name = 'boards'
+    template_name = 'boards/home.html'
+
 
 def board_topics(request, pk):
     board = get_object_or_404(Board, pk=pk)
-    topics = board.topics.order_by('-last_updated').annotate(replies=Count('posts') - 1)
+    queryset = board.topics.order_by('-last_updated').annotate(replies=Count('posts') - 1)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(queryset, 20)
+
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        topics = paginator.page(1)
+    except EmptyPage:
+        topics = paginator.page(paginator.num_pages)
     return render(request, 'boards/topics.html', {'board': board, 'topics': topics})
 
 @login_required
